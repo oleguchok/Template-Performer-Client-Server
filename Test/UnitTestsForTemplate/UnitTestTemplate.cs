@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TemplateLibrary;
 using TemplateLibrary.Strategy;
 using System.IO;
+using TemplateLibrary.Parsers;
 
 namespace UnitTestsForTemplate
 {
@@ -18,6 +19,15 @@ namespace UnitTestsForTemplate
                 template.Render(output);
                 Assert.AreEqual("aba", output.ToString());
             }
+        }
+
+        [TestMethod]
+        public void Can_Replase_Custom_Words_In_CSharp_Code()
+        {
+            var parser = new CSharpTemplateParser();
+            var result = parser.ReplaceCustomText("ff");
+
+            Assert.AreEqual("System.IO.TextWriter(\"ff\");", result);
         }
 
         [TestMethod]

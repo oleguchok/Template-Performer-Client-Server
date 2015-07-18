@@ -11,7 +11,9 @@ namespace TemplateLibrary.Strategy
     {
         void RenderCode(TextWriter output, params object[] parametres);
 
-        void ParseTemplate(String templateText);
+        String ParseTemplate(String templateText);
+
+        void CompileCode(String templateCode);
 
     }
 }

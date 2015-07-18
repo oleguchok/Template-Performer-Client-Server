@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TemplateLibrary.Parsers;
 
 namespace TemplateLibrary
 {
@@ -9,6 +10,7 @@ namespace TemplateLibrary
     {
         protected const String customTextPattern = @"((?<={%.*?%})|^)(?!%}|{%)(.*?)((?={%.*?%})|$)";
 
-       
+        public abstract String ReplaceCustomText(String templateText);
+
     }
 }

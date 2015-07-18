@@ -27,7 +27,8 @@ namespace TemplateLibrary
 
         public void Render(TextWriter output, params object[] parametres)
         {
-            _strategy.ParseTemplate(this.templateText);
+            this.templateText = _strategy.ParseTemplate(this.templateText);
+            _strategy.CompileCode(this.templateText);
         }
 
         public void Dispose()
