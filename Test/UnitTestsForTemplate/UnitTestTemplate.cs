@@ -37,8 +37,33 @@ namespace UnitTestsForTemplate
             using(var compiler = new CSharpCodeCompiler())
             using(var output = new StringWriter())
             {
-                compiler.Compile("output.Write(\"hi\");", output);
+                compiler.Compile("output.Write(\"hi\");", output, new String[0]);
                 Assert.AreEqual("hi", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Add_CSharp_Assemblies_In_Code()
+        {
+            var code = "StringBuilder sb = new StringBuilder(\"test\");" +
+                "sb.Remove(3,1);output.Write(sb.ToString());";
+            using(var compiler = new CSharpCodeCompiler())
+            using(var output = new StringWriter())
+            {
+                compiler.Compile(code, output, new String[1] { "System.Text" });
+                Assert.AreEqual("tes", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException),
+            "Assembly was not found.")]
+        public void If_Add_Non_Existent_Assembly()
+        {
+            using(var compiler = new CSharpCodeCompiler())
+            using(var output = new StringWriter())
+            {
+                compiler.Compile("output.Write(\"s\"", output, new String[] { "ololo" });
             }
         }
 

@@ -21,27 +21,34 @@ namespace TemplateLibrary.Compilers
             parameters = new CompilerParameters();
         }
 
-        public void Compile(String code, TextWriter output)
+        public void Compile(String code, TextWriter output, String[] namespaces)
         {
             DefineCompilerParameters(parameters);
             CompilerResults results = provider.CompileAssemblyFromSource(parameters,
-                InsertCodeInMethodDeclaration(code));
+                InsertCodeInMethodDeclaration(code, namespaces));
             CheckErrorsInCompile(results);
             MethodInfo method = GetMethodOfCompileProgram(results);
             method.Invoke(null, new object[]{ output });
         }
 
-        private String InsertCodeInMethodDeclaration(String code)
+        private String InsertCodeInMethodDeclaration(String code, String[] namespaces)
         {
-            return @"using System;namespace First{class Program{public static " +
+            return FormNamespacesUsing(namespaces) + @"using System;namespace First{class Program{public static " +
                 "void Main(System.IO.TextWriter output){" + code + "}}}";
         }
 
         private void DefineCompilerParameters(CompilerParameters parameters)
         {
-            //parameters.ReferencedAssemblies.Add("System.IO.dll");
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
+        }
+
+        private String FormNamespacesUsing(String[] namespaces)
+        {
+            var result = "";
+            foreach (String assembly in namespaces)
+                result += "using " + assembly + ";";
+            return result;
         }
     
         private void CheckErrorsInCompile(CompilerResults results)

@@ -12,12 +12,14 @@ namespace TemplateLibrary
     {
         private IStrategy _strategy;
         private String templateText;
+        private String[] namespaces;
 
         public Template(IStrategy strategy, String templateText, String[] namespaces,
                         params Variable[] variables)
         {
             _strategy = strategy;
             this.templateText = templateText;
+            this.namespaces = namespaces;
         }
 
         public IStrategy Strategy
@@ -27,8 +29,8 @@ namespace TemplateLibrary
 
         public void Render(TextWriter output, params object[] parametres)
         {
-            this.templateText = _strategy.ParseTemplate(this.templateText);
-            _strategy.CompileCode(this.templateText, output, parametres);
+            _strategy.CompileCode(this.templateText, output, this.namespaces,
+                parametres);
         }
 
         public void Dispose()

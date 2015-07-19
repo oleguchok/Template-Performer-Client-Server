@@ -24,15 +24,17 @@ namespace TemplateLibrary.Strategy
             
         }
 
-        public string ParseTemplate(string templateText)
+        private string ParseTemplate(string templateText)
         {
             templateText = parser.ReplaceCustomText(templateText);
             return templateText;
         }
 
-        public void CompileCode(string templateCode, TextWriter output, params object[] parametres)
+        public void CompileCode(string templateCode, TextWriter output,
+            String[] namespaces, params object[] parametres)
         {
-            compiler.Compile(templateCode, output);
+            templateCode = ParseTemplate(templateCode);
+            compiler.Compile(templateCode, output, namespaces);
         }
     }
 }
