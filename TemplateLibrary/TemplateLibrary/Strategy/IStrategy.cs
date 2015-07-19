@@ -13,7 +13,8 @@ namespace TemplateLibrary.Strategy
 
         String ParseTemplate(String templateText);
 
-        void CompileCode(String templateCode);
+        void CompileCode(String templateCode, TextWriter output, 
+            params object[] parametres);
 
     }
 }

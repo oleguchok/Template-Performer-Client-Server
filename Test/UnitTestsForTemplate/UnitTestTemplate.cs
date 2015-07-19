@@ -4,6 +4,7 @@ using TemplateLibrary;
 using TemplateLibrary.Strategy;
 using System.IO;
 using TemplateLibrary.Parsers;
+using TemplateLibrary.Compilers;
 
 namespace UnitTestsForTemplate
 {
@@ -27,7 +28,18 @@ namespace UnitTestsForTemplate
             var parser = new CSharpTemplateParser();
             var result = parser.ReplaceCustomText("ff");
 
-            Assert.AreEqual("System.IO.TextWriter(\"ff\");", result);
+            Assert.AreEqual("output.Write(\"ff\");", result);
+        }
+
+        [TestMethod]
+        public void Can_Compile_CSharp_Code()
+        {
+            using(var compiler = new CSharpCodeCompiler())
+            using(var output = new StringWriter())
+            {
+                compiler.Compile("output.Write(\"hi\");", output);
+                Assert.AreEqual("hi", output.ToString());
+            }
         }
 
         [TestMethod]

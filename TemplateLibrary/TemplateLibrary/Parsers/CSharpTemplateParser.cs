@@ -8,8 +8,6 @@ namespace TemplateLibrary.Parsers
 {
     public class CSharpTemplateParser : TemplateParser
     {
-        private String csharpWriter = "System.IO.TextWriter";
-
         public override String ReplaceCustomText(String templateText)
         {
             Regex regEx = new Regex(customTextPattern);
@@ -26,7 +24,7 @@ namespace TemplateLibrary.Parsers
         {
             StringBuilder sb = new StringBuilder(text);
             sb.Remove(match.Index, match.Length);
-            sb.Insert(match.Index,csharpWriter + "(\"" + match.Value + "\");");
+            sb.Insert(match.Index,"output.Write(\"" + match.Value + "\");");
             return sb.ToString();
         }
     }
