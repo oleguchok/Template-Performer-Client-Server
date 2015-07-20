@@ -12,7 +12,7 @@ namespace TemplateLibrary.Strategy
         void RenderCode(TextWriter output, params object[] parametres);
 
         void CompileCode(String templateCode, TextWriter output, 
-            String[] namespaces, params object[] parametres);
+            String[] namespaces, params Variable[] parametres);
 
     }
 }

@@ -31,7 +31,7 @@ namespace TemplateLibrary.Strategy
         }
 
         public void CompileCode(string templateCode, TextWriter output,
-            String[] namespaces, params object[] parametres)
+            String[] namespaces, params Variable[] parametres)
         {
             templateCode = ParseTemplate(templateCode);
             compiler.Compile(templateCode, output, namespaces);

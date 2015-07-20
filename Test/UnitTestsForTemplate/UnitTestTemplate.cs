@@ -159,6 +159,41 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        public void Add_Int_Parameter_In_CSharp()
+        {
+            using(var template = new Template(new CSharp(), "{%while(count > 0){%}x{%count--;}%}", 
+                new String[0], new Variable[]{ new Variable("count", ArgumentType.Integer)}))
+            using(var output = new StringWriter())
+            {
+                template.Render(output, 2);
+                Assert.AreEqual("xx", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateRuntimeException))]
+        public void Check_Setting_Of_Parameters_If_Params_Doesnt_Set()
+        {
+            using(var template = new Template(new CSharp(), "", new String[0],
+                new Variable[] {new Variable("n", ArgumentType.Integer)}))
+            using(var output = new StringWriter())
+            {
+                template.Render(output);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateRuntimeException))]
+        public void Check_Setting_Of_Parameters_If_Variables_Doesnt_Set()
+        {
+            using (var template = new Template(new CSharp(), "", new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 1);
+            }
+        }
+
+        [TestMethod]
         public void TestServer()
         {
 
