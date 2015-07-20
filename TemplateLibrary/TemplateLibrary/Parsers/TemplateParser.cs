@@ -10,7 +10,9 @@ namespace TemplateLibrary
     {
         protected const String customTextPattern = @"((?<={%.*?%})|^)(?!%}|{%)(.*?)((?={%.*?%})|$)";
 
-        public abstract String ReplaceCustomText(String templateText);
+        protected abstract String ReplaceCustomText(String templateText);
+
+        public abstract String ParseTemplate(String templateText);
 
     }
 }

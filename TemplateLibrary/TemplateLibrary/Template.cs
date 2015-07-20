@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TemplateLibrary.Exceptions;
 using TemplateLibrary.Strategy;
 
 namespace TemplateLibrary
@@ -31,6 +32,7 @@ namespace TemplateLibrary
         {
             _strategy.CompileCode(this.templateText, output, this.namespaces,
                 parametres);
+            
         }
 
         public void Dispose()

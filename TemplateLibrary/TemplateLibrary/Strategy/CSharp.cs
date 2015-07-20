@@ -26,7 +26,7 @@ namespace TemplateLibrary.Strategy
 
         private string ParseTemplate(string templateText)
         {
-            templateText = parser.ReplaceCustomText(templateText);
+            templateText = parser.ParseTemplate(templateText);
             return templateText;
         }
 

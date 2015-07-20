@@ -27,8 +27,7 @@ namespace UnitTestsForTemplate
         public void Can_Replase_Custom_Words_In_CSharp_Code()
         {
             var parser = new CSharpTemplateParser();
-            var result = parser.ReplaceCustomText("ff");
-
+            var result = parser.ParseTemplate("ff");
             Assert.AreEqual("output.Write(\"ff\");", result);
         }
 
@@ -81,9 +80,23 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException),
+            "Template must not contain code sequence\"{%\" or \"%}\"")]
         public void Incorrect_CSharp_Template_Code()
         {
             using(var template = new Template(new CSharp(), "{%}", new String[0]))
+            using(var output = new StringWriter())
+            {
+                template.Render(output);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException),
+            "Template must not contain code sequence\"{%\" or \"%}\"")]
+        public void Check_That_Code_Doesnt_Contain_False_Code_Sequence()
+        {
+            using(var template = new Template(new CSharp(),"%{%%}%}", new String[0]))
             using(var output = new StringWriter())
             {
                 template.Render(output);
