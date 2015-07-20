@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TemplateLibrary.Exceptions;
 
 namespace TemplateLibrary.Compilers
 {
@@ -59,10 +60,10 @@ namespace TemplateLibrary.Compilers
 
                 foreach (CompilerError error in results.Errors)
                 {
-                    sb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
+                    sb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorText, error.Column));
                 }
-
-                throw new InvalidOperationException(sb.ToString());
+                
+                throw new TemplateFormatException(sb.ToString());
             }
         }
 

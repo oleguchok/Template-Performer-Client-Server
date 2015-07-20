@@ -5,6 +5,7 @@ using TemplateLibrary.Strategy;
 using System.IO;
 using TemplateLibrary.Parsers;
 using TemplateLibrary.Compilers;
+using TemplateLibrary.Exceptions;
 
 namespace UnitTestsForTemplate
 {
@@ -56,7 +57,7 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException),
+        [ExpectedException(typeof(TemplateFormatException),
             "Assembly was not found.")]
         public void If_Add_Non_Existent_Assembly()
         {
@@ -64,6 +65,28 @@ namespace UnitTestsForTemplate
             using(var output = new StringWriter())
             {
                 compiler.Compile("output.Write(\"s\"", output, new String[] { "ololo" });
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException),
+            "Name doesn't exist in this context.")]
+        public void If_Code_For_Compiler_Is_Incorrect()
+        {
+            using(var compiler = new CSharpCodeCompiler())
+            using(var output = new StringWriter())
+            {
+                compiler.Compile("INCORRECT;", output, new String[0]);
+            }
+        }
+
+        [TestMethod]
+        public void Incorrect_CSharp_Template_Code()
+        {
+            using(var template = new Template(new CSharp(), "{%}", new String[0]))
+            using(var output = new StringWriter())
+            {
+                template.Render(output);
             }
         }
 
