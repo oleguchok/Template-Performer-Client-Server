@@ -9,7 +9,7 @@ namespace TemplateLibrary
     public abstract class TemplateParser
     {
         protected const String customTextPattern = @"((?<={%.*?%})|^)(?!%}|{%)(.*?)((?={%.*?%})|$)";
-        protected const String codeSequencePattern = @"{%[^?@=].*?%}";
+        protected const String codeSequencePattern = @"{%([^?@=].*?|)%}";
 
         protected abstract String ReplaceCustomText(String templateText);
 

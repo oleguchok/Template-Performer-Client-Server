@@ -135,6 +135,30 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        public void Can_Execute_Code_Sequence_And_Custom_Text()
+        {
+            using (var template = new Template(new CSharp(), 
+                "{% fo%}{%r(int i = 0; i < 5; i++){ %}*{%}%}",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("*****", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Parse_Two_Custom_Texts()
+        {
+            using(var template = new Template(new CSharp(),"hi{%%}test",new String[0]))
+            using(var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("hitest", output.ToString());
+            }
+        }
+
+        [TestMethod]
         public void TestServer()
         {
 

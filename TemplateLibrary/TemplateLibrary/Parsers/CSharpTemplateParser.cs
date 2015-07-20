@@ -12,34 +12,41 @@ namespace TemplateLibrary.Parsers
         protected override String ReplaceCustomText(String templateText)
         {
             Regex regEx = new Regex(customTextPattern);
-            MatchCollection customTextMatches = regEx.Matches(templateText);
-            foreach(Match match in customTextMatches)
-            {
-                if (match.Value != "")
-                    templateText = ReplaceCustomWordByPositionOfMatch(templateText,
-                        match);
-            }
-            return templateText;
+            MatchEvaluator evaluator = new MatchEvaluator(ReplaceCustomTextEvaluator);
+            return regEx.Replace(templateText, evaluator);
+        }
+
+        private String ReplaceCustomTextEvaluator(Match match)
+        {
+            if (match.Value == "")
+                return match.Value;
+            return "output.Write(\"" + match.Value + "\");";
+        }
+
+        private String ReplaceCodeSequenceEvaluator(Match match)
+        {
+            if (match.Value.Length == 4)
+                return "";
+            return match.Value.Substring(2, match.Length - 4);
         }
 
         private bool IsItContainTrueCodeSequence(String text)
         {
-            int countFirst = text.Split(new string[]{"{%"}, 
-                StringSplitOptions.None).Count() - 1;
-            int countSecond = text.Split(new string[] { "%}" },
-                StringSplitOptions.None).Count() - 1;
-            return countFirst == countSecond;
+            int i = 0, countOfCodeSeq = 0;
+            while(i  < text.Length - 1)
+            {
+                if (text.Substring(i, 2) == "{%" || text.Substring(i, 2) == "%}")
+                {
+                    countOfCodeSeq++;
+                    i += 2;
+                }
+                else
+                    i++;                
+            }
+            return countOfCodeSeq % 2 == 0;
         }
 
-        private String ReplaceCustomWordByPositionOfMatch(String text, Match match)
-        {
-            StringBuilder sb = new StringBuilder(text);
-            sb.Remove(match.Index, match.Length);
-            sb.Insert(match.Index,"output.Write(\"" + match.Value + "\");");
-            return sb.ToString();
-        }
-
-        public override string ParseTemplate(string templateText)
+        public override string ParseTemplate(String templateText)
         {
             CheckFalseCodeSequence(templateText);
             templateText = ReplaceCustomText(templateText);
@@ -54,22 +61,11 @@ namespace TemplateLibrary.Parsers
                     "code sequence\"{%\" or \"%}\"");
         }
 
-        protected override string ReplaceCodeSequence(string templateText)
+        protected override String ReplaceCodeSequence(String templateText)
         {
             Regex regEx = new Regex(codeSequencePattern);
-            MatchCollection matches = regEx.Matches(templateText);
-            foreach (Match match in matches)
-                templateText = ReplaceCodeSequenceByPositionOfMatch(templateText,
-                    match);
-            return templateText;
-        }
-
-        private string ReplaceCodeSequenceByPositionOfMatch(string text, Match match)
-        {
-            StringBuilder sb = new StringBuilder(text);
-            sb.Remove(match.Index + match.Length - 2,2);
-            sb.Remove(match.Index, 2);
-            return sb.ToString();
+            MatchEvaluator evaluator = new MatchEvaluator(ReplaceCodeSequenceEvaluator);
+            return regEx.Replace(templateText, evaluator);
         }
     }
 }
