@@ -30,7 +30,20 @@ namespace TemplateLibrary.Compilers
                 InsertCodeInMethodDeclaration(code, namespaces, parameters));
             CheckErrorsInCompile(results);
             MethodInfo method = GetMethodOfCompileProgram(results);
-            method.Invoke(null, FormInputParameters(output, parameters));
+            InvokeMethod(method, output, parameters);
+        }
+
+        private void InvokeMethod(MethodInfo method, TextWriter output,
+            params Variable[] parameters)
+        {
+            try
+            {
+                method.Invoke(null, FormInputParameters(output, parameters));
+            }
+            catch(Exception e)
+            {
+                throw new TemplateFormatException(e.Message);
+            }
         }
 
         private String InsertCodeInMethodDeclaration(String code, String[] namespaces,

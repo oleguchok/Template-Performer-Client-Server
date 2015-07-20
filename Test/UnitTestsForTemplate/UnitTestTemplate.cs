@@ -170,7 +170,64 @@ namespace UnitTestsForTemplate
             }
         }
 
-       
+        [TestMethod]
+        public void Add_Bool_Long_String_Params_In_CSharp()
+        {
+            using(var template = new Template(new CSharp(),
+                @"{%if(action)%}*{%while(count > 0){%}x{%count--;}output.Write(str);%}",
+                new String[0], new Variable[]
+                {
+                    new Variable("action", ArgumentType.Boolean),
+                    new Variable("count", ArgumentType.Long),
+                    new Variable("str", ArgumentType.String)
+                }))
+            using(var output = new StringWriter())
+            {
+                template.Render(output, true, 2, "test");
+                Assert.AreEqual("*xxtest", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Add_DateTime_Double_In_CSharp()
+        {
+            using(var template = new Template(new CSharp(),
+                @"{%output.Write(n*2);output.Write(time);%}",
+                new String[0], new Variable[]
+                {
+                    new Variable("n", ArgumentType.Double),
+                    new Variable("time", ArgumentType.DateTime)
+                }))
+            using(var output = new StringWriter())
+            {
+                template.Render(output, 2.1, DateTime.Now.Date);
+                Assert.AreEqual("4,2" + DateTime.Now.Date.ToString(), output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException))]
+        public void Add_Incorrect_Input_Data_CSharp()
+        {
+            using(var template = new Template(new CSharp(), @"{%while(i > 0){%}*{%i--;}%}",
+                new String[0], new Variable[]{new Variable("i", ArgumentType.String)}))
+            using(var output = new StringWriter())
+            {
+                template.Render(output, "test");
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException))]
+        public void Add_Incorrect_Type_Of_Input_Data_CSharp()
+        {
+            using (var template = new Template(new CSharp(), @"{%while(i > 0){%}*{%i--;}%}",
+                new String[0], new Variable[] { new Variable("i", ArgumentType.Integer) }))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, "test");
+            }
+        }
 
         [TestMethod]
         [ExpectedException(typeof(TemplateRuntimeException))]
