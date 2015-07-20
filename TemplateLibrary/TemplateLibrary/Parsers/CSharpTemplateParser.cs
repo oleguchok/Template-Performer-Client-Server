@@ -9,6 +9,8 @@ namespace TemplateLibrary.Parsers
 {
     public class CSharpTemplateParser : TemplateParser
     {
+        private int nameForLoopVariable = 0;
+
         protected override String ReplaceCustomText(String templateText)
         {
             Regex regEx = new Regex(customTextPattern);
@@ -51,6 +53,7 @@ namespace TemplateLibrary.Parsers
             CheckFalseCodeSequence(templateText);
             templateText = ReplaceCustomText(templateText);
             templateText = ReplaceCodeSequence(templateText);
+            templateText = ReplaceLoopSequence(templateText);
             return templateText;
         }
 
@@ -66,6 +69,40 @@ namespace TemplateLibrary.Parsers
             Regex regEx = new Regex(codeSequencePattern);
             MatchEvaluator evaluator = new MatchEvaluator(ReplaceCodeSequenceEvaluator);
             return regEx.Replace(templateText, evaluator);
+        }
+
+        protected override string ReplaceLoopSequence(string templateText)
+        {
+            var result = templateText;
+            Regex regEx = new Regex(loopSequencePattern);
+            MatchEvaluator evaluator = new MatchEvaluator(ReplaceLoopSequenceEvaluator);
+            while (regEx.IsMatch(result))
+            {
+                result = regEx.Replace(result, evaluator);
+            }
+            return result;
+        }
+
+        private String ReplaceLoopSequenceEvaluator(Match match)
+        {
+            var id = (nameForLoopVariable++).ToString();
+            var expression = FindExpressionInLoopSequence(match.Value);
+            var result = "for(int ii" + id + "=0;ii" + id + "<" + expression +
+                ";ii" + id  + "++){" + GetLoopContents(match.Value) + "}";
+            return result;
+        }
+
+        private String FindExpressionInLoopSequence(String sequence)
+        {
+            Regex regEx = new Regex("(?<={%@).*?(?=%})");
+            Match match = regEx.Match(sequence);
+            return match.Value;
+        }
+
+        private String GetLoopContents(String text)
+        {
+            int expressionLength = FindExpressionInLoopSequence(text).Length;
+            return text.Substring(expressionLength + 5, text.Length - expressionLength - 10);
         }
     }
 }

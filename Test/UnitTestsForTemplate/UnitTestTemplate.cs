@@ -253,6 +253,35 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        public void Can_Identify_Nested_Loop_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%@n%}<{%@ n + m %}*{%@%}>{%@%}",
+                new String[0],
+                new Variable("n", ArgumentType.Integer),
+                new Variable("m", ArgumentType.Integer)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 2, 1);
+                Assert.AreEqual("<***><***>", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Identity_Loop_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%@n%}<>{%@%}",
+                new String[0],
+                new Variable("n", ArgumentType.Integer)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 2);
+                Assert.AreEqual("<><>", output.ToString());
+            }
+        }
+
+        [TestMethod]
         public void TestServer()
         {
 
