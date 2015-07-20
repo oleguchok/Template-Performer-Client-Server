@@ -54,6 +54,7 @@ namespace TemplateLibrary.Parsers
             templateText = ReplaceCustomText(templateText);
             templateText = ReplaceCodeSequence(templateText);
             templateText = ReplaceLoopSequence(templateText);
+            templateText = ReplaceVariableForOutput(templateText);
             return templateText;
         }
 
@@ -86,16 +87,17 @@ namespace TemplateLibrary.Parsers
         private String ReplaceLoopSequenceEvaluator(Match match)
         {
             var id = (nameForLoopVariable++).ToString();
-            var expression = FindExpressionInLoopSequence(match.Value);
-            var result = "for(int ii" + id + "=0;ii" + id + "<" + expression +
-                ";ii" + id  + "++){" + GetLoopContents(match.Value) + "}";
-            return result;
+            return "for(int ii" + id + "=0;ii" + id + "<" 
+                + FindExpressionInLoopSequence(match.Value) + ";ii" 
+                + id  + "++){" + GetLoopContents(match.Value) + "}";
         }
 
         private String FindExpressionInLoopSequence(String sequence)
         {
             Regex regEx = new Regex("(?<={%@).*?(?=%})");
             Match match = regEx.Match(sequence);
+            if (match.Value.Replace(" ", String.Empty) == String.Empty)
+                throw new TemplateFormatException("There is no loop variable");
             return match.Value;
         }
 
@@ -103,6 +105,22 @@ namespace TemplateLibrary.Parsers
         {
             int expressionLength = FindExpressionInLoopSequence(text).Length;
             return text.Substring(expressionLength + 5, text.Length - expressionLength - 10);
+        }
+
+        protected override string ReplaceVariableForOutput(string templateText)
+        {
+            Regex regEx = new Regex(variableForOutputPattern);
+            MatchEvaluator evaluator = new MatchEvaluator(ReplaceVariableForOutputEvaluator);
+            return regEx.Replace(templateText, evaluator);
+        }
+
+        private String ReplaceVariableForOutputEvaluator(Match match)
+        {
+            String variable = match.Value.Substring(3, match.Value.Length - 5);
+            variable = variable.Replace(" ", String.Empty);
+            if (variable == String.Empty)
+                throw new TemplateFormatException("There is no variable for output");
+            return "output.Write(" + variable + ");";
         }
     }
 }

@@ -12,9 +12,10 @@ namespace TemplateLibrary
         protected const String codeSequencePattern = @"{%([^?@=].*?|)%}";
         protected const String loopSequencePattern = @"{%@.*%}(?>(?!{%@.*?%}|{%@%}).|" + 
             "{%@.*?%}(?<Depth>)|{%@%}(?<-Depth>))*(?(Depth)(?!)){%@%}";
+        protected const String variableForOutputPattern = @"{%=.*?%}";
 
         protected abstract String ReplaceCustomText(String templateText);
-
+        protected abstract String ReplaceVariableForOutput(String templateText);
         protected abstract String ReplaceCodeSequence(String templateText);
         protected abstract String ReplaceLoopSequence(String templateText);
 

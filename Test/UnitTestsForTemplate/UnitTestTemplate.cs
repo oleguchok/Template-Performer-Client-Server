@@ -268,7 +268,7 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
-        public void Can_Identity_Loop_Sequence()
+        public void Can_Identify_Loop_Sequence()
         {
             using (var template = new Template(new CSharp(),
                 "{%@n%}<>{%@%}",
@@ -278,6 +278,105 @@ namespace UnitTestsForTemplate
             {
                 template.Render(output, 2);
                 Assert.AreEqual("<><>", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException))]
+        public void Can_Identify_False_Loop_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%@n%}<{%@ds%}>{%@%}",
+                new String[0],
+                new Variable("n", ArgumentType.Integer),
+                new Variable("ds",ArgumentType.String)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 2, 3);
+            }
+        }
+
+        [TestMethod]
+        public void Can_Identify_Loop_And_Code_Sequences()
+        {
+            using (var template = new Template(new CSharp(),
+                "hi{%if(testBool){%}{%@n%}<>{%@%}{%}%}",
+                new String[0],
+                new Variable("testBool", ArgumentType.Boolean),
+                new Variable("n", ArgumentType.Integer)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, true, 1);
+                Assert.AreEqual("hi<>", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateRuntimeException))]
+        public void If_Empty_Loop_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%@%}<>{%@%}",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, true, 1);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException))]
+        public void If_Loop_Sequence_Has_Input_Params_Without_Declaration()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%@%}sd{%@%}",
+                new String[0],
+                new Variable("n", ArgumentType.Integer)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 1);
+            }
+        }
+
+        [TestMethod]
+        public void Can_Identify_Output_For_Variables()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%=i%} and {%= str %} or {%= time%}",
+                new String[0],
+                new Variable("i", ArgumentType.Integer),
+                new Variable("str", ArgumentType.String),
+                new Variable("time", ArgumentType.DateTime)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 10, "TEST", DateTime.Now.Date);
+                Assert.AreEqual("10 and TEST or " + DateTime.Now.Date, output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException))]
+        public void If_Empty_Output_For_Variables()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%=%}",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException))]
+        public void If_Empty_With_Spaces_Output_For_Variables()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%=             %}",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
             }
         }
 
