@@ -104,6 +104,37 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        public void Can_Identify_Code_Sequence()
+        {
+            using(var template = new Template(new CSharp(),"{%output.Write(\"From sequence\");%}",
+                new String[0]))
+            using(var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("From sequence", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Parse_Code_Sequence_Correctly()
+        {
+            var parser = new CSharpTemplateParser();
+            String result = parser.ParseTemplate("{%s%}");
+            Assert.AreEqual("s", result);
+        }
+
+        [TestMethod]
+        public void Can_Handle_Empty_String()
+        {
+            using(var template = new Template(new CSharp(),"", new String[0]))
+            using(var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("", output.ToString());
+            }
+        }
+
+        [TestMethod]
         public void TestServer()
         {
 
