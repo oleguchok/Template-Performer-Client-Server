@@ -17,11 +17,7 @@ namespace TemplateLibrary.Strategy
         {
             parser = new CSharpTemplateParser();
             compiler = new CSharpCodeCompiler();
-        }
-
-        public void RenderCode(TextWriter output, params object[] parametres)
-        {
-            
+            ArgumentType.SetCSharpTypes();
         }
 
         private string ParseTemplate(string templateText)
@@ -31,10 +27,10 @@ namespace TemplateLibrary.Strategy
         }
 
         public void CompileCode(string templateCode, TextWriter output,
-            String[] namespaces, params Variable[] parametres)
+            String[] namespaces, params Variable[] parameters)
         {
             templateCode = ParseTemplate(templateCode);
-            compiler.Compile(templateCode, output, namespaces);
+            compiler.Compile(templateCode, output, namespaces, parameters);
         }
     }
 }

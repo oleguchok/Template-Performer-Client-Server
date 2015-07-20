@@ -22,5 +22,17 @@ namespace TemplateLibrary
             get { return value; }
             set { this.value = value; }
         }
+
+        public ArgumentType ArgumentType
+        {
+            get { return argumentType; }
+            set { argumentType = value; }
+        }
+
+        public String Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
     }
 }

@@ -14,28 +14,49 @@ namespace TemplateLibrary.Compilers
     public class CSharpCodeCompiler : IDisposable
     {
         private CSharpCodeProvider provider;
-        private CompilerParameters parameters;    
+        private CompilerParameters compilerParameters;    
 
         public CSharpCodeCompiler()
         {
             provider = new CSharpCodeProvider();
-            parameters = new CompilerParameters();
+            compilerParameters = new CompilerParameters();
         }
 
-        public void Compile(String code, TextWriter output, String[] namespaces)
+        public void Compile(String code, TextWriter output, String[] namespaces, 
+            params Variable[] parameters)
         {
-            DefineCompilerParameters(parameters);
-            CompilerResults results = provider.CompileAssemblyFromSource(parameters,
-                InsertCodeInMethodDeclaration(code, namespaces));
+            DefineCompilerParameters(compilerParameters);
+            CompilerResults results = provider.CompileAssemblyFromSource(compilerParameters,
+                InsertCodeInMethodDeclaration(code, namespaces, parameters));
             CheckErrorsInCompile(results);
             MethodInfo method = GetMethodOfCompileProgram(results);
-            method.Invoke(null, new object[]{ output });
+            method.Invoke(null, FormInputParameters(output, parameters));
         }
 
-        private String InsertCodeInMethodDeclaration(String code, String[] namespaces)
+        private String InsertCodeInMethodDeclaration(String code, String[] namespaces,
+            params Variable[] parameters)
+        {            
+            return FormNamespacesUsing(namespaces) + @"using System;namespace First{" + 
+                "class Program{public static void Main(System.IO.TextWriter output" + 
+                GetInputParameters(parameters) + "){" + code + "}}}";
+        }
+
+        private String GetInputParameters(Variable[] parameters)
         {
-            return FormNamespacesUsing(namespaces) + @"using System;namespace First{class Program{public static " +
-                "void Main(System.IO.TextWriter output){" + code + "}}}";
+            var result = "";
+            foreach (Variable param in parameters)
+                result += "," + param.ArgumentType.Value + " " + param.Name;
+            return result;
+        }
+
+        private object[] FormInputParameters(TextWriter output, Variable[] parameters)
+        {
+            object[] input = new object[parameters.Length + 1];
+            input[0] = output;
+            int i = 1;
+            foreach (Variable param in parameters)
+                input[i++] = param.Value;
+            return input;
         }
 
         private void DefineCompilerParameters(CompilerParameters parameters)

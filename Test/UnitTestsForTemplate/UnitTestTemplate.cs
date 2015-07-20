@@ -37,7 +37,7 @@ namespace UnitTestsForTemplate
             using(var compiler = new CSharpCodeCompiler())
             using(var output = new StringWriter())
             {
-                compiler.Compile("output.Write(\"hi\");", output, new String[0]);
+                compiler.Compile("output.Write(\"hi\");", output, new String[0], new Variable[0]);
                 Assert.AreEqual("hi", output.ToString());
             }
         }
@@ -169,6 +169,8 @@ namespace UnitTestsForTemplate
                 Assert.AreEqual("xx", output.ToString());
             }
         }
+
+       
 
         [TestMethod]
         [ExpectedException(typeof(TemplateRuntimeException))]

@@ -9,8 +9,6 @@ namespace TemplateLibrary.Strategy
 {
     public interface IStrategy
     {
-        void RenderCode(TextWriter output, params object[] parametres);
-
         void CompileCode(String templateCode, TextWriter output, 
             String[] namespaces, params Variable[] parametres);
 
