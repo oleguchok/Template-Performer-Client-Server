@@ -11,6 +11,5 @@ namespace TemplateLibrary.Strategy
     {
         void CompileCode(String templateCode, TextWriter output, 
             String[] namespaces, params Variable[] parametres);
-
     }
 }

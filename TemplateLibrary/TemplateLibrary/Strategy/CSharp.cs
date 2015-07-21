@@ -20,16 +20,10 @@ namespace TemplateLibrary.Strategy
             ArgumentType.SetCSharpTypes();
         }
 
-        private string ParseTemplate(string templateText)
-        {
-            templateText = parser.ParseTemplate(templateText);
-            return templateText;
-        }
-
         public void CompileCode(string templateCode, TextWriter output,
             String[] namespaces, params Variable[] parameters)
         {
-            templateCode = ParseTemplate(templateCode);
+            templateCode = parser.ParseTemplate(templateCode);
             compiler.Compile(templateCode, output, namespaces, parameters);
         }
     }
