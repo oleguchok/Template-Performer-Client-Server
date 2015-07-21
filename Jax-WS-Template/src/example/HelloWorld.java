@@ -11,9 +11,5 @@ public class HelloWorld {
     System.out.println(result);
     return result;
   }
-  public static void main(String[] argv) {
-    Object implementor = new HelloWorld ();
-    String address = "http://localhost:9000/HelloWorld";
-    Endpoint.publish(address, implementor);
-  }
+
 }

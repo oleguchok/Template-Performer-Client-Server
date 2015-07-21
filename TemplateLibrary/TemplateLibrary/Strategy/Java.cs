@@ -10,17 +10,20 @@ namespace TemplateLibrary.Strategy
     public class Java : IStrategy
     {
         private TemplateParser parser;
+        private JaxWSConnector connector;
         
         public Java()
         {
             parser = new JavaTemplateParser();
+            connector = new JaxWSConnector();
             ArgumentType.SetJavaTypes();
         }
 
         public void CompileCode(string templateCode, TextWriter output,
-            string[] namespaces, params Variable[] parametres)
+            string[] namespaces, params Variable[] parameters)
         {
             templateCode = parser.ParseTemplate(templateCode);
+            connector.GetResultOfCompile(templateCode, namespaces, parameters);
         }
     }
 }
