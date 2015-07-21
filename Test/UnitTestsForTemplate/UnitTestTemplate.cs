@@ -262,8 +262,8 @@ namespace UnitTestsForTemplate
                 new Variable("m", ArgumentType.Integer)))
             using (var output = new StringWriter())
             {
-                template.Render(output, 2, 1);
-                Assert.AreEqual("<***><***>", output.ToString());
+                template.Render(output, 2, 2);
+                Assert.AreEqual("<****><****>", output.ToString());
             }
         }
 
@@ -355,6 +355,21 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        public void Can_Identify_Two_Loop_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                "{%@i%}x{%@%} or {%@j%}y{%@%}",
+                new String[0],
+                new Variable("i", ArgumentType.Integer),
+                new Variable("j", ArgumentType.Integer)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 1, 2);
+                Assert.AreEqual("x or yy", output.ToString());
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(TemplateFormatException))]
         public void If_Empty_Output_For_Variables()
         {
@@ -373,6 +388,63 @@ namespace UnitTestsForTemplate
         {
             using (var template = new Template(new CSharp(),
                 "{%=             %}",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+            }
+        }
+
+        [TestMethod]
+        public void Can_Identify_Boolean_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                @"{%?s.Equals(""TEST"")%}TRUE{%@3%}!{%@%}{%?%}",
+                new String[0],
+                new Variable("s", ArgumentType.String)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, "TEST");
+                Assert.AreEqual("TRUE!!!", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Identify_Two_Boolean_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                @"{%?s.Equals(""TEST"")%}TRUE{%?%}{%?test%}!{%?%}",
+                new String[0],
+                new Variable("test", ArgumentType.Boolean),
+                new Variable("s", ArgumentType.String)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, true, "TEST");
+                Assert.AreEqual("TRUE!", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Identify_Nested_Boolean_Sequences()
+        {
+            using (var template = new Template(new CSharp(),
+                @"{%?s.Equals(""TEST"")%}TRUE{%?test%}!{%?%}{%?%}",
+                new String[0],
+                new Variable("test", ArgumentType.Boolean),
+                new Variable("s", ArgumentType.String)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, true, "TEST");
+                Assert.AreEqual("TRUE!", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TemplateFormatException))]
+        public void If_Empty_Boolean_Sequence()
+        {
+            using (var template = new Template(new CSharp(),
+                @"{%?%}{%?%}",
                 new String[0]))
             using (var output = new StringWriter())
             {
