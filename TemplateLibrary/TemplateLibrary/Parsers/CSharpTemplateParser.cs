@@ -11,13 +11,6 @@ namespace TemplateLibrary.Parsers
     {
         private int nameForLoopVariable = 0;
 
-        protected override String ReplaceCustomText(String templateText)
-        {
-            Regex regEx = new Regex(customTextPattern);
-            MatchEvaluator evaluator = new MatchEvaluator(ReplaceCustomTextEvaluator);
-            return regEx.Replace(templateText, evaluator);
-        }
-
         private String ReplaceCustomTextEvaluator(Match match)
         {
             if (match.Value == "")
@@ -27,31 +20,17 @@ namespace TemplateLibrary.Parsers
 
         private String ReplaceCodeSequenceEvaluator(Match match)
         {
-            if (match.Value.Length == 4)
+            if (match.Value.Length == 4 ||
+                match.Value.Replace(" ", String.Empty) == String.Empty)
                 return "";
             return match.Value.Substring(2, match.Length - 4);
-        }
-
-        private bool IsItContainTrueCodeSequence(String text)
-        {
-            int i = 0, countOfCodeSeq = 0;
-            while(i  < text.Length - 1)
-            {
-                if (text.Substring(i, 2) == "{%" || text.Substring(i, 2) == "%}")
-                {
-                    countOfCodeSeq++;
-                    i += 2;
-                }
-                else
-                    i++;                
-            }
-            return countOfCodeSeq % 2 == 0;
         }
 
         public override string ParseTemplate(String templateText)
         {
             CheckFalseCodeSequence(templateText);
-            templateText = ReplaceCustomText(templateText);
+            templateText = ReplaceSimpleCodeSequenceText(templateText, customTextPattern,
+                new MatchEvaluator(ReplaceCustomTextEvaluator));
             templateText = ReplaceCodeSequence(templateText);
             templateText = ReplaceNestedSequence(templateText, loopSequencePattern,
                 new MatchEvaluator(ReplaceLoopSequenceEvaluator));
@@ -59,13 +38,6 @@ namespace TemplateLibrary.Parsers
             templateText = ReplaceNestedSequence(templateText, booleanSequencePattern,
                 new MatchEvaluator(ReplaceBooleanSequenceEvaluator));
             return templateText;
-        }
-
-        private void CheckFalseCodeSequence(String templateText)
-        {
-            if (!IsItContainTrueCodeSequence(templateText))
-                throw new TemplateFormatException("Template must not contain " +
-                    "code sequence\"{%\" or \"%}\"");
         }
 
         protected override String ReplaceCodeSequence(String templateText)

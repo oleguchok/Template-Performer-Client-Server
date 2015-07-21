@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using TemplateLibrary.Parsers;
 
 namespace TemplateLibrary.Strategy
 {
@@ -12,13 +13,14 @@ namespace TemplateLibrary.Strategy
         
         public Java()
         {
+            parser = new JavaTemplateParser();
             ArgumentType.SetJavaTypes();
         }
 
         public void CompileCode(string templateCode, TextWriter output,
             string[] namespaces, params Variable[] parametres)
         {
-            throw new NotImplementedException();
+            templateCode = parser.ParseTemplate(templateCode);
         }
     }
 }

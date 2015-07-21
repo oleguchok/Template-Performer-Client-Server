@@ -453,6 +453,18 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        public void Can_Parse_Java_Code()
+        {
+            var parser = new JavaTemplateParser();
+            using(var output = new StringWriter())
+            {
+                var res = parser.ParseTemplate(@"hi{%?s.Equals(""test"")%}{%@2%}*{%@%}{%?%}");
+                Assert.AreEqual("output.write(\"hi\");if(s.Equals(\"test\")){for(int ii0" +
+                "=0;ii0<2;ii0++){output.write(\"*\");}}", res);
+            }
+        }
+
+        [TestMethod]
         public void TestServer()
         {
 
