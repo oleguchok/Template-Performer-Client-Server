@@ -7,7 +7,7 @@ using TemplateLibrary.Parsers;
 
 namespace TemplateLibrary.Strategy
 {
-    public class Java : IStrategy
+    public class Java : IStrategy, IDisposable
     {
         private TemplateParser parser;
         private JaxWSConnector connector;
@@ -24,6 +24,11 @@ namespace TemplateLibrary.Strategy
         {
             templateCode = parser.ParseTemplate(templateCode);
             connector.GetResultOfCompile(templateCode, namespaces, parameters);
+        }
+
+        public void Dispose()
+        {
+            connector.Dispose();
         }
     }
 }

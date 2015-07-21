@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TemplateLibrary.Strategy
 {
-    public interface IStrategy
+    public interface IStrategy : IDisposable
     {
         void CompileCode(String templateCode, TextWriter output, 
             String[] namespaces, params Variable[] parameters);

@@ -8,7 +8,7 @@ using TemplateLibrary.Parsers;
 
 namespace TemplateLibrary.Strategy
 {
-    public class CSharp : IStrategy
+    public class CSharp : IStrategy, IDisposable
     {
         private TemplateParser parser;
         private CSharpCodeCompiler compiler;
@@ -25,6 +25,11 @@ namespace TemplateLibrary.Strategy
         {
             templateCode = parser.ParseTemplate(templateCode);
             compiler.Compile(templateCode, output, namespaces, parameters);
+        }
+
+        public void Dispose()
+        {
+            compiler.Dispose();
         }
     }
 }

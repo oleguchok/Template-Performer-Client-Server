@@ -51,7 +51,7 @@ namespace TemplateLibrary
 
         public void Dispose()
         {
-           
+            _strategy.Dispose();
         }
 
     }
