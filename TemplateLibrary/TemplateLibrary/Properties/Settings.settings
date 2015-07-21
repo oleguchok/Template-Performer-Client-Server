@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TemplateLibrary.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="TemplateLibrary_TemplateWSService_TemplateWSService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://localhost:9000/TemplateWS</Value>
+    <Setting Name="TemplateLibrary_TemplateWSService_TemplateWSImplService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:9000/TemplateWSImpl</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace TemplateLibrary
 {
+    [Serializable]
     public class Variable
     {
         String name;

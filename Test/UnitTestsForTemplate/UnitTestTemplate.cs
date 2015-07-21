@@ -465,9 +465,24 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
-        public void TestServer()
+        public void TestServer_Without_Passing_Arguments()
         {
+            using(var connector = new JaxWSConnector())
+            {
+                String result = connector.GetResultOfCompile("template", new String[0]);
+                Assert.AreEqual(result, "template");
+            }
+        }
 
+        [TestMethod]
+        public void TestServer_With_Passing_Arguments()
+        {
+            using(var connector = new JaxWSConnector())
+            {
+                String result = connector.GetResultOfCompile("output.Write(\"s\");", 
+                    new String[0]);
+                Assert.AreEqual(result, "test");
+            }
         }
     }
 }

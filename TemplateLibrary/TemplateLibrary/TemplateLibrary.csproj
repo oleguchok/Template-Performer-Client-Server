@@ -82,22 +82,22 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Web References\TemplateWSService\TemplateWS.xsd">
+    <None Include="Web References\TemplateWSService\TemplateWSImpl.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Web References\TemplateWSService\TemplateWSService.wsdl" />
+    <None Include="Web References\TemplateWSService\TemplateWSImplService.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://localhost:9000/TemplateWS%3fwsdl">
+    <WebReferenceUrl Include="http://localhost:9000/TemplateWSImpl%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\TemplateWSService\</RelPath>
-      <UpdateFromURL>http://localhost:9000/TemplateWS%3fwsdl</UpdateFromURL>
+      <UpdateFromURL>http://localhost:9000/TemplateWSImpl%3fwsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>TemplateLibrary_TemplateWSService_TemplateWSService</CachedSettingsPropName>
+      <CachedSettingsPropName>TemplateLibrary_TemplateWSService_TemplateWSImplService</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

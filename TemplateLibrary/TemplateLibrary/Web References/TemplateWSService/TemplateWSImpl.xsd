@@ -6,6 +6,14 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string" />
       <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="tns:Variable" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Variable">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string" />
+      <xs:element minOccurs="0" name="type" type="xs:string" />
+      <xs:element minOccurs="0" name="value" type="xs:anyType" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="getResultOfCompileResponse">

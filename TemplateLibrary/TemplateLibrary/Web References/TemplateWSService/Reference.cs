@@ -26,16 +26,18 @@ namespace TemplateLibrary.TemplateWSService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Web.Services.WebServiceBindingAttribute(Name="TemplateWSPortBinding", Namespace="http://WS/")]
-    public partial class TemplateWSService : System.Web.Services.Protocols.SoapHttpClientProtocol {
+    [System.Web.Services.WebServiceBindingAttribute(Name="TemplateWSImplPortBinding", Namespace="http://WS/")]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(getResultOfCompileResponse))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(getResultOfCompile))]
+    public partial class TemplateWSImplService : System.Web.Services.Protocols.SoapHttpClientProtocol {
         
         private System.Threading.SendOrPostCallback getResultOfCompileOperationCompleted;
         
         private bool useDefaultCredentialsSetExplicitly;
         
         /// <remarks/>
-        public TemplateWSService() {
-            this.Url = global::TemplateLibrary.Properties.Settings.Default.TemplateLibrary_TemplateWSService_TemplateWSService;
+        public TemplateWSImplService() {
+            this.Url = global::TemplateLibrary.Properties.Settings.Default.TemplateLibrary_TemplateWSService_TemplateWSImplService;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
@@ -75,26 +77,28 @@ namespace TemplateLibrary.TemplateWSService {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://WS/", ResponseNamespace="http://WS/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string getResultOfCompile([System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] string arg0, [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)] string[] arg1) {
+        public string getResultOfCompile([System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] string arg0, [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)] string[] arg1, [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)] Variable[] arg2) {
             object[] results = this.Invoke("getResultOfCompile", new object[] {
                         arg0,
-                        arg1});
+                        arg1,
+                        arg2});
             return ((string)(results[0]));
         }
         
         /// <remarks/>
-        public void getResultOfCompileAsync(string arg0, string[] arg1) {
-            this.getResultOfCompileAsync(arg0, arg1, null);
+        public void getResultOfCompileAsync(string arg0, string[] arg1, Variable[] arg2) {
+            this.getResultOfCompileAsync(arg0, arg1, arg2, null);
         }
         
         /// <remarks/>
-        public void getResultOfCompileAsync(string arg0, string[] arg1, object userState) {
+        public void getResultOfCompileAsync(string arg0, string[] arg1, Variable[] arg2, object userState) {
             if ((this.getResultOfCompileOperationCompleted == null)) {
                 this.getResultOfCompileOperationCompleted = new System.Threading.SendOrPostCallback(this.OngetResultOfCompileOperationCompleted);
             }
             this.InvokeAsync("getResultOfCompile", new object[] {
                         arg0,
-                        arg1}, this.getResultOfCompileOperationCompleted, userState);
+                        arg1,
+                        arg2}, this.getResultOfCompileOperationCompleted, userState);
         }
         
         private void OngetResultOfCompileOperationCompleted(object arg) {
@@ -120,6 +124,124 @@ namespace TemplateLibrary.TemplateWSService {
                 return true;
             }
             return false;
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34230")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://WS/")]
+    public partial class Variable {
+        
+        private string nameField;
+        
+        private string typeField;
+        
+        private object valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public object value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34230")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://WS/")]
+    public partial class getResultOfCompileResponse {
+        
+        private string returnField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return {
+            get {
+                return this.returnField;
+            }
+            set {
+                this.returnField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34230")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://WS/")]
+    public partial class getResultOfCompile {
+        
+        private string arg0Field;
+        
+        private string[] arg1Field;
+        
+        private Variable[] arg2Field;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0 {
+            get {
+                return this.arg0Field;
+            }
+            set {
+                this.arg0Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg1 {
+            get {
+                return this.arg1Field;
+            }
+            set {
+                this.arg1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public Variable[] arg2 {
+            get {
+                return this.arg2Field;
+            }
+            set {
+                this.arg2Field = value;
+            }
         }
     }
     
