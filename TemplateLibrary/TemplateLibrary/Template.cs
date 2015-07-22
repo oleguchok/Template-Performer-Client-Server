@@ -43,7 +43,7 @@ namespace TemplateLibrary
             if ((param.Count() == 0 && variables.Count() != 0) ||
                 (variables.Count() == 0 && param.Count() != 0))
                 throw new TemplateRuntimeException("There are no input parameters",
-                    new ArgumentException());
+                    new NullReferenceException());
             if (variables.Count() == param.Count())
                 for (int i = 0; i < param.Count(); i++)
                     variables[i].Value = param[i];

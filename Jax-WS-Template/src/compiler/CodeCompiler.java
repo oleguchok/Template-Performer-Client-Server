@@ -1,6 +1,7 @@
 package compiler;
 
 import WS.Variable;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 
 import javax.tools.*;
 import java.io.*;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class CodeCompiler
@@ -61,7 +63,7 @@ public class CodeCompiler
                         "public class Code {"
                         + "public static void main(java.io.PrintWriter output"
                         + getVariables(variables) + "){"
-                        + templateCode + "}}"
+                        + templateCode + "output.flush();output.close();}}"
         );
         JavaFileObject so = null;
         try
@@ -104,6 +106,7 @@ public class CodeCompiler
         // Create a File object on the root of the directory
         // containing the class file
         File file = new File(classOutputFolder);
+        StringWriter sw = new StringWriter();
 
         try
         {
@@ -117,11 +120,12 @@ public class CodeCompiler
             // Load in the class; Class.childclass should be located in
             // the directory file:/class/demo/
             Class thisClass = loader.loadClass("math.Code");
-            printWriter = new PrintWriter(outputFile);
+            printWriter = new PrintWriter(sw);
             Class params[] = new Class[parameters.length+1];
             params[0] = PrintWriter.class;
             for(int i = 1; i < params.length; i++)
-                params[i] = parameters[i-1].getValue().getClass();
+                params[i] = Class.forName(parameters[i-1].getType());
+//                params[i] = parameters[i-1].getValue().getClass();
             Object paramsObj[] = new Object[parameters.length + 1];
             paramsObj[0] = printWriter;
             for(int i = 1; i < params.length; i++)
@@ -131,19 +135,19 @@ public class CodeCompiler
 
             thisMethod.invoke(instance, paramsObj);
         }
-        catch (MalformedURLException e)
-        {
-        }
-        catch (ClassNotFoundException e)
-        {
-        }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
-        finally {
-            return "l";
+        finally{
+            try{
+                sw.close();
+            }
+            catch (Exception e){
+
+            }
         }
+        return sw.toString();
     }
 
     private static String code;
@@ -164,8 +168,17 @@ public class CodeCompiler
         this.packages = packages;
         if (params == null)
             this.parameters = new Variable[0];
-        else
-            this.parameters = params;
+        else {
+            this.parameters = new Variable[params.length];
+            for (int i = 0; i < params.length; i++) {
+                if (params[i].getType() == "java.lang.Long") {
+                    this.parameters[i] = params[i];
+                    this.parameters[i].setValue(new Long((int)params[i].getValue()));
+                } else {
+                    this.parameters[i] = params[i];
+                }
+            }
+        }
     }
 
     private static String getPackages(String[] packages)
@@ -183,7 +196,7 @@ public class CodeCompiler
         return  result;
     }
 
-    public String getResultOfComiling(String code, String[] packages,
+    public String getResultOfCompiling(String code, String[] packages,
                                              Variable...variables)
     {
         loadParameters(code, packages, variables);
@@ -199,11 +212,17 @@ public class CodeCompiler
         return runIt();
     }
 
-    public static void main(String[] args) {
-
-        CodeCompiler cc = new CodeCompiler();
-        String result = cc.getResultOfComiling("output.write(\"s\");System.out.println(\"!\");output.close();",
-                new String[0]);
-        System.out.println(result);
-    }
+//    public static void main(String[] args) {
+//
+//        CodeCompiler c = new CodeCompiler();
+//        Variable n = new Variable();
+//        n.setName("n");n.setValue(false);n.setType("java.lang.Boolean");
+////        Variable m = new Variable();
+////        m.setType("java.lang.Integer");m.setValue(1);m.setName("m");
+//        String res= c.getResultOfCompiling("output.write(String.valueOf(n));",
+//                new String[0],
+//                n);
+//
+//        System.out.println(res);
+//    }
 }

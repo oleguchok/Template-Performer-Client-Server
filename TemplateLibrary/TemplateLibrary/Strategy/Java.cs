@@ -23,7 +23,7 @@ namespace TemplateLibrary.Strategy
             string[] namespaces, params Variable[] parameters)
         {
             templateCode = parser.ParseTemplate(templateCode);
-            connector.GetResultOfCompile(templateCode, namespaces, parameters);
+            connector.CompileJavaCode(templateCode, namespaces, output, parameters);
         }
 
         public void Dispose()

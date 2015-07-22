@@ -6,6 +6,8 @@ using System.IO;
 using TemplateLibrary.Parsers;
 using TemplateLibrary.Compilers;
 using TemplateLibrary.Exceptions;
+using System.Linq;
+using System.Text;
 
 namespace UnitTestsForTemplate
 {
@@ -316,11 +318,11 @@ namespace UnitTestsForTemplate
         public void If_Empty_Loop_Sequence()
         {
             using (var template = new Template(new CSharp(),
-                "{%@%}<>{%@%}",
+                "{%@%}{%@%}",
                 new String[0]))
             using (var output = new StringWriter())
             {
-                template.Render(output, true, 1);
+                template.Render(output, true);
             }
         }
 
@@ -440,6 +442,19 @@ namespace UnitTestsForTemplate
         }
 
         [TestMethod]
+        public void Can_Identify_Code_Sequence_Java()
+        {
+            using (var template = new Template(new Java(),
+                "{%output.write(String.valueOf(\"From sequence\"));%}",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("From sequence", output.ToString());
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(TemplateFormatException))]
         public void If_Empty_Boolean_Sequence()
         {
@@ -459,18 +474,8 @@ namespace UnitTestsForTemplate
             using(var output = new StringWriter())
             {
                 var res = parser.ParseTemplate(@"hi{%?s.Equals(""test"")%}{%@2%}*{%@%}{%?%}");
-                Assert.AreEqual("output.write(\"hi\");if(s.Equals(\"test\")){for(int ii0" +
-                "=0;ii0<2;ii0++){output.write(\"*\");}}", res);
-            }
-        }
-
-        [TestMethod]
-        public void TestServer_Without_Passing_Arguments()
-        {
-            using(var connector = new JaxWSConnector())
-            {
-                String result = connector.GetResultOfCompile("template", new String[0]);
-                Assert.AreEqual(result, "template");
+                Assert.AreEqual("output.write(String.valueOf(\"hi\"));if(s.Equals(\"test\"))" + 
+                    "{for(int ii0=0;ii0<2;ii0++){output.write(String.valueOf(\"*\"));}}", res);
             }
         }
 
@@ -478,10 +483,196 @@ namespace UnitTestsForTemplate
         public void TestServer_With_Passing_Arguments()
         {
             using(var connector = new JaxWSConnector())
+            using(var output = new StringWriter())
             {
-                String result = connector.GetResultOfCompile("output.Write(\"s\");", 
-                    new String[0]);
-                Assert.AreEqual(result, "test");
+                ArgumentType.SetJavaTypes();
+                Variable variable = new Variable("s", ArgumentType.String);
+                variable.Value = "test";
+                connector.CompileJavaCode("output.write(s);", 
+                    new String[0], output, variable);
+                Assert.AreEqual("test", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Server_Can_Compile_Sequences()
+        {
+            using (var template = new Template(new Java(),
+                "{% fo%}{%r(int i = 0; i < 5; i++){ %}*{%}%}", new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("*****", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Identify_Bool_Sequence_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"{%?s.equals(""TEST"")%}TRUE{%@3%}!{%@%}{%?%}", 
+                new String[0], new Variable("s", ArgumentType.String)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, "TEST");
+                Assert.AreEqual("TRUE!!!", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void If_Pass_False_Argument()
+        {
+            using (var template = new Template(new Java(), 
+                @"{%?%}{%?%}", new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, "TEST");
+            }
+        }
+
+        //[TestMethod]
+        //public void Can_Pass_DateTime_Java()
+        //{
+        //    using (var template = new Template(new Java(),
+        //        @"{%=date%}", new String[0],
+        //        new Variable("date", ArgumentType.DateTime)))
+        //    using (var output = new StringWriter())
+        //    {
+        //        template.Render(output, DateTime.Now.Date);
+        //        Assert.AreEqual(DateTime.Now.Date.ToString(), output.ToString());
+        //    }
+        //}
+
+        [TestMethod]
+        public void Can_Pass_Boolean_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"{%=b%}", new String[0],
+                new Variable("b", ArgumentType.Boolean)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, false);
+                Assert.AreEqual("false", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Pass_Double_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"{%=d%}", new String[0],
+                new Variable("d", ArgumentType.Double)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 1.2);
+                Assert.AreEqual("1.2", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Add_Packages_To_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"{%double d = 0; d = Math.sin(d);%}{%=d%}", new String[] { "java.lang.Math" }))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("0.0", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Pass_Long_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"{%=l%}", new String[0],
+                new Variable("l", ArgumentType.Long)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, 301923091203213);
+                Assert.AreEqual("301923091203213", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Handle_Simple_Words_In_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"testik",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("testik", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Handle_Complex_Expression()
+        {
+            using (var template = new Template(new Java(),
+                "hi{%if(testBool){%}{%@n%}<>{%@%}{%}%}",
+                new String[0],
+                new Variable("testBool", ArgumentType.Boolean),
+                new Variable("n", ArgumentType.Integer)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output, true, 1);
+                Assert.AreEqual("hi<>", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void Can_Handle_Error_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"{%@%}{%@%}",
+                new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+            }
+        }
+
+        [TestMethod]
+        public void Can_Handle_Code_Sequence_Java()
+        {
+            using (var template = new Template(new Java(),
+                @"{%@n%}1{%@m%}2{%@%}{%@%}",
+                new String[0],
+                new Variable("n", ArgumentType.Integer),
+                new Variable("m", ArgumentType.Integer)))
+            using (var output = new StringWriter())
+            {
+                template.Render(output,1,1);
+                Assert.AreEqual("12", output.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Can_Handle_Code_Sequence_And_Expression_Java()
+        {
+            using (var template = new Template(new Java(), 
+                @"{%for(int i = 0; i < 3; i++){%}{%=i%}{%}%}", new String[0]))
+            using (var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("012", output.ToString());
+            }
+
+        }
+
+        [TestMethod]
+        public void If_Pass_Empty_String()
+        {
+            using(Template template = new Template(new Java(),
+                "", new String[0]))
+            using(var output = new StringWriter())
+            {
+                template.Render(output);
+                Assert.AreEqual("", output.ToString());
             }
         }
     }

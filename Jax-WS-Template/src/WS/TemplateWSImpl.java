@@ -19,7 +19,7 @@ public class TemplateWSImpl implements TemplateWS {
     {
         String result = "";
         try {
-            result = compiler.getResultOfComiling(templateCode, packages, args);
+            result = compiler.getResultOfCompiling(templateCode, packages, args);
         }
         catch (Exception e){
 

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplatePerfomerClient", "TemplatePerfomerClient\TemplatePerfomerClient.csproj", "{1810201A-1C9B-4FE8-B25A-30E5EC1D6EA5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateLibrary", "..\TemplateLibrary\TemplateLibrary\TemplateLibrary.csproj", "{8FFE8DE3-4CE9-4967-A0CF-382303FE3C5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestsForTemplate", "..\Test\UnitTestsForTemplate\UnitTestsForTemplate.csproj", "{56C5656B-A58A-44AA-BC2E-869A579AC53E}"
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1810201A-1C9B-4FE8-B25A-30E5EC1D6EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1810201A-1C9B-4FE8-B25A-30E5EC1D6EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1810201A-1C9B-4FE8-B25A-30E5EC1D6EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1810201A-1C9B-4FE8-B25A-30E5EC1D6EA5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8FFE8DE3-4CE9-4967-A0CF-382303FE3C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8FFE8DE3-4CE9-4967-A0CF-382303FE3C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FFE8DE3-4CE9-4967-A0CF-382303FE3C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU

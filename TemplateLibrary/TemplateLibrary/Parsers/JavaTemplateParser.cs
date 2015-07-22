@@ -24,7 +24,7 @@ namespace TemplateLibrary.Parsers
             variable = variable.Replace(" ", String.Empty);
             if (variable == String.Empty)
                 throw new TemplateFormatException("There is no variable for output");
-            return "output.write(" + variable + ");";
+            return "output.write(String.valueOf(" + variable + "));";
         }
 
         protected override string ReplaceCodeSequence(string templateText)
@@ -70,7 +70,7 @@ namespace TemplateLibrary.Parsers
         {
             if (match.Value == "")
                 return match.Value;
-            return "output.write(\"" + match.Value + "\");";
+            return "output.write(String.valueOf(\"" + match.Value + "\"));";
         }
 
         private String ReplaceLoopSequenceEvaluator(Match match)

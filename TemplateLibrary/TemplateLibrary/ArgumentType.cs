@@ -38,10 +38,10 @@ namespace TemplateLibrary
         public static void SetJavaTypes()
         {
             ArgumentType.String.Value = "java.lang.String";
-            ArgumentType.Integer.Value = "int";
-            ArgumentType.Long.Value = "long";
-            ArgumentType.Boolean.Value = "boolean";
-            ArgumentType.Double.Value = "double";
+            ArgumentType.Integer.Value = "java.lang.Integer";
+            ArgumentType.Long.Value = "java.lang.Long";
+            ArgumentType.Boolean.Value = "java.lang.Boolean";
+            ArgumentType.Double.Value = "java.lang.Double";
             ArgumentType.DateTime.Value = "java.util.Calendar";
         }
     }
